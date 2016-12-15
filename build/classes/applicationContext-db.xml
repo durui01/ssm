@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  - Application context definition for JPetStore's business layer.
+  - Contains bean references to the transaction manager and to the DAOs in
+  - dataAccessContext-local/jta.xml (see web.xml's "contextConfigLocation").
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:aop="http://www.springframework.org/schema/aop"
+	     xmlns:tx="http://www.springframework.org/schema/tx"
+	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	   
+	   	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <!-- 指定连接数据库的驱动 -->
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <!-- 指定连接数据库的URL -->
+        <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8"/>
+       <!--  指定连接数据库的用户名 -->
+        <property name="username" value="root"/>
+        <!-- 指定连接数据库的密码 -->
+        <property name="password" value="123456"/>
+        
+      </bean> 
+       
+       
+       <!-- C3p0数据池 -->
+	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	   <property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>
+	  <property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:orcl"></property>
+      <property name="user" value="scott"></property>
+      <property name="password" value="admin"></property>
+	</bean> -->
+        
+        <bean  id="sqlSessionFactory"  class="org.mybatis.spring.SqlSessionFactoryBean">
+           <property name="dataSource" ref="dataSource"></property>
+           <property name="configLocation">
+             <value>classpath:sqlMapConfig.xml</value>
+           </property>
+        </bean>
+        
+        <!-- 配置mapper扫描器 -->
+	 <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.dr.dao.CwDataMapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory">
+		
+		</property>
+	</bean>
+        
+</beans>

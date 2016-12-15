@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+      <package name="first" extends="struts-default">
+      		<action name="cw_*" class="cwAction" method="{1}">
+      			<result name="success">/success.jsp</result>
+      			<result name="suc">/query.jsp</result>
+      			<result name="fail">/fail.jsp</result>
+      			<result name="motify">/motify.jsp</result>
+      			<result name="querybyId">/queryById.jsp</result>
+      			
+      			
+      		</action>
+      		
+      		
+      </package>
+</struts>

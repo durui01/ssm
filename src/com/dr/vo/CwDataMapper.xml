@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dr.dao.CwDataMapper" >
+  <resultMap id="BaseResultMap" type="com.dr.vo.CwData" >
+    <id column="DATAID" property="dataid" jdbcType="VARCHAR" />
+    <result column="DATATITLE" property="datatitle" jdbcType="VARCHAR" />
+    <result column="DATATYPE" property="datatype" jdbcType="VARCHAR" />
+    <result column="DATACONTENT" property="datacontent" jdbcType="VARCHAR" />
+    <result column="DATAPUBLTIME" property="datapubltime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DATAID, DATATITLE, DATATYPE, DATACONTENT, DATAPUBLTIME
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from  CWDATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </select>
+  
+     <!-- 通过主题来查询全部的 -->
+  <select id="queryByTitle"  resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select  
+    <include refid="Base_Column_List" />
+    from CWDATA
+    where  DATATITLE like concat(concat('%',#{DATATITLE}),'%')
+  <!--  ename like '%'||#{ename}||'%'   ,jdbcType=VARCHAR}  
+        DATATITLE like concat(concat('%',#{DATATITLE}),'%')--> 
+  
+  </select>
+    
+<!-- 查询全部的 -->
+  <select id="queryAll"  resultType="com.dr.vo.CwData"  >
+    select * from CWDATA
+  </select>
+
+   <!-- 分页实现 
+  		1.获取总记录数
+  		2.分页rownum
+  -->
+       
+       <select id="queryCount" resultMap="BaseResultMap">
+       		select count(*) as intcount from CWDATA
+       </select>
+       
+<!-- 分页记录 -->
+ <select id="queryPage" resultType="com.dr.vo.CwData" parameterType="hashMap">
+ 	 <![CDATA[
+		select * from  
+		(select rownum as r, DATAID, DATATITLE, DATATYPE, DATACONTENT, DATAPUBLTIME from CWDATA
+		WHERE rownum <=#{offset})t where t.r>#{onset} order by t.DATAID
+	]]>
+  </select>
+
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CWDATA
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dr.vo.CwData" >
+    insert into CWDATA ( DATATITLE, DATATYPE, 
+      DATACONTENT, DATAPUBLTIME)
+    values (  #{datatitle,jdbcType=VARCHAR}, #{datatype,jdbcType=CHAR}, 
+      #{datacontent,jdbcType=VARCHAR}, #{datapubltime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dr.vo.CwData" >
+    insert into CWDATA
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dataid != null" >
+        DATAID,
+      </if>
+      <if test="datatitle != null" >
+        DATATITLE,
+      </if>
+      <if test="datatype != null" >
+        DATATYPE,
+      </if>
+      <if test="datacontent != null" >
+        DATACONTENT,
+      </if>
+      <if test="datapubltime != null" >
+        DATAPUBLTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dataid != null" >
+        #{dataid,jdbcType=VARCHAR},
+      </if>
+      <if test="datatitle != null" >
+        #{datatitle,jdbcType=VARCHAR},
+      </if>
+      <if test="datatype != null" >
+        #{datatype,jdbcType=CHAR},
+      </if>
+      <if test="datacontent != null" >
+        #{datacontent,jdbcType=VARCHAR},
+      </if>
+      <if test="datapubltime != null" >
+        #{datapubltime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dr.vo.CwData" >
+    update CWDATA
+    <set >
+      <if test="datatitle != null" >
+        DATATITLE = #{datatitle,jdbcType=VARCHAR},
+      </if>
+      <if test="datatype != null" >
+        DATATYPE = #{datatype,jdbcType=CHAR},
+      </if>
+      <if test="datacontent != null" >
+        DATACONTENT = #{datacontent,jdbcType=VARCHAR},
+      </if>
+      <if test="datapubltime != null" >
+        DATAPUBLTIME = #{datapubltime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dr.vo.CwData" >
+    update CWDATA
+   set  DATAID = #{dataid,jdbcType=VARCHAR},
+      DATATITLE = #{datatitle,jdbcType=VARCHAR},
+      DATATYPE = #{datatype,jdbcType=CHAR},
+      DATACONTENT = #{datacontent,jdbcType=VARCHAR},
+      DATAPUBLTIME = #{datapubltime,jdbcType=VARCHAR}
+    where DATAID = #{dataid,jdbcType=VARCHAR}
+  </update>
+</mapper>
